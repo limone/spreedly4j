@@ -4,14 +4,11 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="invoice")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class InvoiceResponse implements Serializable {
+public class PaymentResponse implements Serializable {
 	@XmlElement(nillable=false,required=true)
 	private Boolean closed;
 	
@@ -27,6 +24,9 @@ public class InvoiceResponse implements Serializable {
 	@XmlElement(name="subscriber-store-credit",nillable=false,required=true)
 	private String subscriberStoreCredit;
 	
+	@XmlElement(name="customer-id",nillable=false,required=true)
+	private Long customerId;
+	
 	@XmlElement(nillable=false,required=true)
 	private String price;
 	
@@ -37,12 +37,12 @@ public class InvoiceResponse implements Serializable {
 	private String currencyCode;
 	
 	@XmlElement(name="line-items",nillable=false,required=true)
-	private List<ResponseLineItem> lineItems;
+	private List<PaymentResponseLineItem> lineItems;
 	
 	@XmlElement(nillable=false,required=true)
 	private ResponseSubscriber subscriber;
 	
-	public InvoiceResponse() {
+	public PaymentResponse() {
 		// empty
 	}
 
@@ -86,6 +86,14 @@ public class InvoiceResponse implements Serializable {
 		this.subscriberStoreCredit = subscriberStoreCredit;
 	}
 
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+
 	public String getPrice() {
 		return price;
 	}
@@ -110,11 +118,11 @@ public class InvoiceResponse implements Serializable {
 		this.currencyCode = currencyCode;
 	}
 
-	public List<ResponseLineItem> getLineItems() {
+	public List<PaymentResponseLineItem> getLineItems() {
 		return lineItems;
 	}
 
-	public void setLineItems(List<ResponseLineItem> lineItems) {
+	public void setLineItems(List<PaymentResponseLineItem> lineItems) {
 		this.lineItems = lineItems;
 	}
 

@@ -14,13 +14,13 @@ public class InvoiceRequest implements Serializable {
 	private Long subscriptionPlanId;
 	
 	@XmlElement(nillable=false,required=true)
-	private InvoiceRequestSubscriber subscriber;
+	private RequestSubscriber subscriber;
 	
 	public InvoiceRequest() {
 		// empty
 	}
 
-	public InvoiceRequest(Long subscriptionPlanId, InvoiceRequestSubscriber subscriber) {
+	public InvoiceRequest(Long subscriptionPlanId, RequestSubscriber subscriber) {
 		this.subscriptionPlanId = subscriptionPlanId;
 		this.subscriber = subscriber;
 	}
@@ -33,11 +33,11 @@ public class InvoiceRequest implements Serializable {
 		this.subscriptionPlanId = subscriptionPlanId;
 	}
 
-	public InvoiceRequestSubscriber getSubscriber() {
+	public RequestSubscriber getSubscriber() {
 		return subscriber;
 	}
 
-	public void setSubscriber(InvoiceRequestSubscriber subscriber) {
+	public void setSubscriber(RequestSubscriber subscriber) {
 		this.subscriber = subscriber;
 	}
 }
