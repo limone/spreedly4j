@@ -25,4 +25,15 @@ public class Subscriptions implements Serializable {
 	public void setSubscriptions(List<Subscription> subscriptions) {
 		this.subscriptions = subscriptions;
 	}
+
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("Subscriptions [subscriptions= {");
+		for (Subscription s : subscriptions) {
+			sb.append(" subscription=[").append(s.toString()).append("]");
+		}
+		sb.append("}");
+		return sb.toString();
+	}
 }

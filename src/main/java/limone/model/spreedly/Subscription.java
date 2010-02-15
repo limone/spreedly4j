@@ -73,6 +73,11 @@ public class Subscription implements Serializable {
 		// empty
 	}
 
+	@Override
+	public String toString() {
+		return "Subscription [amount=" + amount + ", chargeAfterFirstPeriod=" + chargeAfterFirstPeriod + ", chargeLaterDurationQuantity=" + chargeLaterDurationQuantity + ", chargeLaterDurationUnits=" + chargeLaterDurationUnits + ", createdAt=" + createdAt + ", currencyCode=" + currencyCode + ", description=" + description + ", durationQuantity=" + durationQuantity + ", durationUnits=" + durationUnits + ", enabled=" + enabled + ", featureLevel=" + featureLevel + ", forceRecurring=" + forceRecurring + ", id=" + id + ", name=" + name + ", needsToBeRenewed=" + needsToBeRenewed + ", planType=" + planType + ", price=" + price + ", returnUrl=" + returnUrl + ", terms=" + terms + ", updatedAt=" + updatedAt + "]";
+	}
+
 	public Integer getId() {
 		return id;
 	}

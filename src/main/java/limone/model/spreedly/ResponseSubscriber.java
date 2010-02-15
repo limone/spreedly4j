@@ -70,6 +70,11 @@ public class ResponseSubscriber implements Serializable {
 		// empty
 	}
 
+	@Override
+	public String toString() {
+		return "ResponseSubscriber [active=" + active + ", activeUntil=" + activeUntil + ", billingFirstName=" + billingFirstName + ", billingLastName=" + billingLastName + ", cardExpiresBeforeNextAutoRenew=" + cardExpiresBeforeNextAutoRenew + ", createdAt=" + createdAt + ", customerId=" + customerId + ", eligibleForFreeTrial=" + eligibleForFreeTrial + ", email=" + email + ", featureLevel=" + featureLevel + ", lifetimeSubscription=" + lifetimeSubscription + ", onTrial=" + onTrial + ", recurring=" + recurring + ", screenName=" + screenName + ", storeCredit=" + storeCredit + ", storeCreditCurrencyCode=" + storeCreditCurrencyCode + ", subscriptionPlanName=" + subscriptionPlanName + ", token=" + token + ", updatedAt=" + updatedAt + "]";
+	}
+
 	public Long getCustomerId() {
 		return customerId;
 	}

@@ -13,6 +13,8 @@ import limone.model.spreedly.InvoiceRequest;
 import limone.model.spreedly.InvoiceResponse;
 import limone.model.spreedly.PaymentRequest;
 import limone.model.spreedly.PaymentResponse;
+import limone.model.spreedly.ResponseSubscriber;
+import limone.model.spreedly.Subscriber;
 import limone.model.spreedly.Subscriptions;
 
 public interface SpreedlyIntegrationService extends Serializable {
@@ -32,4 +34,10 @@ public interface SpreedlyIntegrationService extends Serializable {
 	@Produces("application/xml")
 	@Path("/invoices/{token}/pay.xml")
 	public PaymentResponse processPayment(PaymentRequest request);
+	
+	@POST
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	@Path("/subscribers.xml")
+	public ResponseSubscriber createSubscriber(Subscriber s);
 }
