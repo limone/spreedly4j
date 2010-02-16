@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class InvoiceRequest implements Serializable {
 	@XmlElement(name="subscription_plan_id",nillable=false,required=true)
-	private Long subscriptionPlanId;
+	private Integer subscriptionPlanId;
 	
 	@XmlElement(nillable=false,required=true)
 	private RequestSubscriber subscriber;
@@ -20,16 +20,16 @@ public class InvoiceRequest implements Serializable {
 		// empty
 	}
 
-	public InvoiceRequest(Long subscriptionPlanId, RequestSubscriber subscriber) {
+	public InvoiceRequest(Integer subscriptionPlanId, RequestSubscriber subscriber) {
 		this.subscriptionPlanId = subscriptionPlanId;
 		this.subscriber = subscriber;
 	}
 
-	public Long getSubscriptionPlanId() {
+	public Integer getSubscriptionPlanId() {
 		return subscriptionPlanId;
 	}
 
-	public void setSubscriptionPlanId(Long subscriptionPlanId) {
+	public void setSubscriptionPlanId(Integer subscriptionPlanId) {
 		this.subscriptionPlanId = subscriptionPlanId;
 	}
 

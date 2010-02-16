@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RequestSubscriber implements Serializable {
 	@XmlElement(name="customer_id",nillable=false,required=true)
-	private Long customerId;
+	private Integer customerId;
 	
 	@XmlElement(name="screen_name",nillable=false,required=true)
 	private String screenName;
@@ -21,17 +21,17 @@ public class RequestSubscriber implements Serializable {
 		// empty
 	}
 
-	public RequestSubscriber(Long customerId, String screenName, String email) {
+	public RequestSubscriber(Integer customerId, String screenName, String email) {
 		this.customerId = customerId;
 		this.screenName = screenName;
 		this.email = email;
 	}
 
-	public Long getCustomerId() {
+	public Integer getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(Long customerId) {
+	public void setCustomerId(Integer customerId) {
 		this.customerId = customerId;
 	}
 

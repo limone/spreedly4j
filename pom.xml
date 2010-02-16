@@ -18,6 +18,15 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>spreedly</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+	</profiles>
 
 	<dependencies>
 		<dependency>
@@ -34,7 +43,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.5.8</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -46,12 +54,59 @@
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-bundle-jaxrs</artifactId>
 			<version>2.2.6</version>
-			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.abdera</groupId>
+					<artifactId>abdera-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.abdera</groupId>
+					<artifactId>abdera-extensions-json</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.abdera</groupId>
+					<artifactId>abdera-extensions-main</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.abdera</groupId>
+					<artifactId>abdera-i18n</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.ws.commons.axiom</groupId>
+					<artifactId>axiom-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.ws.commons.axiom</groupId>
+					<artifactId>axiom-impl</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.abdera</groupId>
+					<artifactId>abdera-parser</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>geronimo-servlet_2.5_spec</artifactId>
+					<groupId>org.apache.geronimo.specs</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jetty</artifactId>
+					<groupId>org.mortbay.jetty</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jetty-util</artifactId>
+					<groupId>org.mortbay.jetty</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-servlet_2.5_spec</artifactId>
+			<version>1.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

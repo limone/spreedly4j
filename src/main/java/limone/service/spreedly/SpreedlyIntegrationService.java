@@ -3,10 +3,12 @@ package limone.service.spreedly;
 import java.io.Serializable;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import limone.model.spreedly.InvoiceRequest;
@@ -22,7 +24,7 @@ public interface SpreedlyIntegrationService extends Serializable {
 	@Produces("application/xml")
 	@Consumes("application/xml")
 	@Path("/invoices.xml")
-	public InvoiceResponse createInvoice(InvoiceRequest request);
+	public InvoiceResponse createInvoice(InvoiceRequest request) throws SpreedlyException;
 	
 	@GET
 	@Produces("application/xml")
@@ -33,11 +35,15 @@ public interface SpreedlyIntegrationService extends Serializable {
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	@Path("/invoices/{token}/pay.xml")
-	public PaymentResponse processPayment(PaymentRequest request);
+	public PaymentResponse processPayment(@PathParam("token") String token, PaymentRequest request) throws SpreedlyException;
 	
 	@POST
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	@Path("/subscribers.xml")
-	public ResponseSubscriber createSubscriber(Subscriber s);
+	public ResponseSubscriber createSubscriber(Subscriber s) throws SpreedlyException;
+	
+	@DELETE
+	@Path("/subscribers/{id}.xml")
+	public void deleteSubscriber(@PathParam("id") Integer id) throws SpreedlyException;
 }
