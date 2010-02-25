@@ -18,6 +18,10 @@ public class Subscriptions implements Serializable {
 		// empty
 	}
 
+	public Subscriptions(List<Subscription> subscriptions) {
+		this.subscriptions = subscriptions;
+	}
+
 	public List<Subscription> getSubscriptions() {
 		return subscriptions;
 	}

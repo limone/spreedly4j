@@ -29,7 +29,7 @@ public interface SpreedlyIntegrationService extends Serializable {
 	@GET
 	@Produces("application/xml")
 	@Path("/subscription_plans.xml")
-	public Subscriptions getSubscriptionPlans();
+	public Subscriptions getSubscriptionPlans() throws SpreedlyException;
 	
 	@PUT
 	@Consumes("application/xml")
@@ -46,4 +46,9 @@ public interface SpreedlyIntegrationService extends Serializable {
 	@DELETE
 	@Path("/subscribers/{id}.xml")
 	public void deleteSubscriber(@PathParam("id") Integer id) throws SpreedlyException;
+	
+	@GET
+	@Produces("application/xml")
+	@Path("/subscribers/{customer_id}.xml")
+	public ResponseSubscriber getSubscriber(@PathParam("customer_id") Long customerId) throws SpreedlyException;
 }

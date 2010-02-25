@@ -19,10 +19,18 @@ import org.slf4j.LoggerFactory;
 
 public class SpreedlyPaymentProcessorTest extends TestCase {
 	private final Logger log = LoggerFactory.getLogger(getClass());
+	private String BASE_URL;
+	private String SPREEDLY_API_KEY;
 	
+	@Override
+	protected void setUp() throws Exception {
+		BASE_URL = System.getProperty("BASE_URL");
+		SPREEDLY_API_KEY = System.getProperty("SPREEDLY_API_KEY");
+	}
+
 	@Test
 	public void testSpreedlyPaymentProcessor() {
-		new SpreedlyPaymentProcessor();
+		new SpreedlyPaymentProcessor(BASE_URL, SPREEDLY_API_KEY);
 	}
 
 	@Test
@@ -34,7 +42,7 @@ public class SpreedlyPaymentProcessorTest extends TestCase {
 
 	@Test
 	public void testGetSubscriptions() {
-		SpreedlyPaymentProcessor spp = new SpreedlyPaymentProcessor();
+		SpreedlyPaymentProcessor spp = new SpreedlyPaymentProcessor(BASE_URL, SPREEDLY_API_KEY);
 		SubscriptionResponse sr = spp.getSubscriptions();
 		assertNotNull("Subscription list was null.", sr);
 		assertTrue("Subscription response was not okay: " + sr.getStatusCode() + " - " + sr.getStatusMessage(), sr.isOkay());
@@ -46,14 +54,14 @@ public class SpreedlyPaymentProcessorTest extends TestCase {
 	
 	@Test
 	public void testDeleteSubscriber() {
-		SpreedlyPaymentProcessor spp = new SpreedlyPaymentProcessor();
+		SpreedlyPaymentProcessor spp = new SpreedlyPaymentProcessor(BASE_URL, SPREEDLY_API_KEY);
 		spp.deleteSubscriber(0);
 	}
 	
 	@Test
 	public void testCreateSubscriber() {
-		SpreedlyPaymentProcessor spp = new SpreedlyPaymentProcessor();
-		Subscriber subscriber = new Subscriber(0, "test");
+		SpreedlyPaymentProcessor spp = new SpreedlyPaymentProcessor(BASE_URL, SPREEDLY_API_KEY);
+		Subscriber subscriber = new Subscriber(0l, "test");
 		CreateSubscriberResponse csr = spp.createSubscriber(subscriber);
 		assertNotNull("Subscriber response was null.", csr);
 		assertTrue("Create subscriber was not okay: " + csr.getStatusCode() + " - " + csr.getStatusMessage(), csr.isOkay());
@@ -62,7 +70,7 @@ public class SpreedlyPaymentProcessorTest extends TestCase {
 	
 	@Test
 	public void testCreateInvoice() {
-		SpreedlyPaymentProcessor spp = new SpreedlyPaymentProcessor();
+		SpreedlyPaymentProcessor spp = new SpreedlyPaymentProcessor(BASE_URL, SPREEDLY_API_KEY);
 		Subscription s = spp.getSubscriptions().getSubscriptions().getSubscriptions().get(0);
 		RequestSubscriber subscriber = new RequestSubscriber(0, "Test", "test@limone.me");
 		InvoiceRequest req = new InvoiceRequest(s.getId(), subscriber);
@@ -73,7 +81,7 @@ public class SpreedlyPaymentProcessorTest extends TestCase {
 	
 	@Test
 	public void testProcessPayment() {
-		SpreedlyPaymentProcessor spp = new SpreedlyPaymentProcessor();
+		SpreedlyPaymentProcessor spp = new SpreedlyPaymentProcessor(BASE_URL, SPREEDLY_API_KEY);
 		Subscription s = spp.getSubscriptions().getSubscriptions().getSubscriptions().get(0);
 		RequestSubscriber subscriber = new RequestSubscriber(0, "Test", "test@limone.me");
 		InvoiceRequest req = new InvoiceRequest(s.getId(), subscriber);

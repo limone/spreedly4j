@@ -1,5 +1,7 @@
 package limone.service.spreedly;
 
+import java.util.Collections;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -8,6 +10,8 @@ import limone.model.AbstractResponse;
 import limone.model.CreateInvoiceResponse;
 import limone.model.CreateSubscriberResponse;
 import limone.model.DeleteSubscriberResponse;
+import limone.model.GetSubscriberLinkResponse;
+import limone.model.GetSubscriberResponse;
 import limone.model.ProcessPaymentResponse;
 import limone.model.SubscriptionResponse;
 import limone.model.spreedly.InvoiceRequest;
@@ -16,6 +20,8 @@ import limone.model.spreedly.PaymentRequest;
 import limone.model.spreedly.PaymentResponse;
 import limone.model.spreedly.ResponseSubscriber;
 import limone.model.spreedly.Subscriber;
+import limone.model.spreedly.Subscription;
+import limone.model.spreedly.Subscriptions;
 
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
@@ -27,26 +33,16 @@ import org.slf4j.LoggerFactory;
 
 public class SpreedlyPaymentProcessor {
 	private final Logger log = LoggerFactory.getLogger(getClass());
-	private final String BASE_URL;
-	private final String SPREEDLY_API_KEY;
+	private String BASE_URL;
+	private String SPREEDLY_API_KEY;
 	private SpreedlyIntegrationService spreedly;
 	private WebClient client;
 
 	/**
-	 * Generic constructor - tries to load the base URL and API key from system
-	 * properties. Pass these in via -DBASE_URL and -DSPREEDLY_API_KEY. Not
-	 * secure in any particular way, but sure is lazy.
+	 * Only here for Spring.
 	 */
-	public SpreedlyPaymentProcessor() {
-		BASE_URL = System.getProperty("BASE_URL");
-		SPREEDLY_API_KEY = System.getProperty("SPREEDLY_API_KEY");
-
-		if (BASE_URL == null || BASE_URL.length() == 0) { throw new IllegalArgumentException("Base URL was not specified."); }
-
-		if (SPREEDLY_API_KEY == null || SPREEDLY_API_KEY.length() == 0) { throw new IllegalArgumentException("Spreedly API key was not specified."); }
-
-		log.info("Creating Spreedly integration client.");
-		init(BASE_URL, SPREEDLY_API_KEY);
+	protected SpreedlyPaymentProcessor() {
+		// empty
 	}
 
 	/**
@@ -65,7 +61,7 @@ public class SpreedlyPaymentProcessor {
 		this.SPREEDLY_API_KEY = SPREEDLY_API_KEY;
 
 		log.info("Creating Spreedly integration client.");
-		init(BASE_URL, SPREEDLY_API_KEY);
+		init();
 	}
 
 	/**
@@ -83,6 +79,18 @@ public class SpreedlyPaymentProcessor {
 		} catch (Exception ex) {
 			return generateErrorResponse(new SubscriptionResponse(), ex);
 		}
+	}
+	
+	public SubscriptionResponse getSubscription(String planName) {
+		SubscriptionResponse sr = getSubscriptions();
+		if (sr.isOkay()) {
+			for (Subscription s : sr.getSubscriptions().getSubscriptions()) {
+				if (s.getName().equalsIgnoreCase(planName)) {
+					return new SubscriptionResponse(true, Status.OK.getStatusCode(), "Retrieved subscription.", new Subscriptions(Collections.singletonList(s)));
+				}
+			}
+		}
+		return new SubscriptionResponse(false, Status.NOT_FOUND.getStatusCode(), String.format("No plan by the name of %s was found.", planName), null);
 	}
 
 	/**
@@ -179,6 +187,53 @@ public class SpreedlyPaymentProcessor {
 			return generateErrorResponse(new ProcessPaymentResponse(), ex);
 		}
 	}
+	
+	public GetSubscriberResponse getSubscriber(Long subscriberId) {
+		try {
+			ResponseSubscriber resp = spreedly.getSubscriber(subscriberId);
+			int statusCode = getStatusCode();
+			if (statusCode == -1 || statusCode == Status.OK.getStatusCode()) {
+				return new GetSubscriberResponse(true, statusCode, "Retrieved subscriber details.", resp);
+			} else if (statusCode == Status.NOT_FOUND.getStatusCode()) {
+				return new GetSubscriberResponse(false, statusCode, "No subscriber with the specified ID could be found.", null);
+			}
+			return new GetSubscriberResponse(false, statusCode, "An unknown error occurred while trying to retrieve subscriber information.", null);
+		} catch (SpreedlyException se) {
+			return generateErrorResponse(new GetSubscriberResponse(), se);
+		} catch (WebApplicationException wae) {
+			return generateErrorResponse(new GetSubscriberResponse(), wae);
+		} catch (Exception ex) {
+			return generateErrorResponse(new GetSubscriberResponse(), ex);
+		}
+	}
+	
+	public GetSubscriberLinkResponse getSubscriberLink(Subscriber s, Integer planId) {
+		try {
+			ResponseSubscriber rs = null;
+			
+			// Do they exist?
+			GetSubscriberResponse gsr = getSubscriber(s.getCustomerId());
+			if (gsr.isOkay()) {
+				rs = gsr.getSubscriber();
+			} else {
+				CreateSubscriberResponse csr = createSubscriber(s);
+				if (csr.isOkay()) {
+					rs = csr.getSubscriber();
+				} else {
+					log.error("Could not create subscriber: {} - {}", csr.getStatusCode(), csr.getStatusMessage());
+					return new GetSubscriberLinkResponse(false, csr.getStatusCode(), csr.getStatusMessage(), null);
+				}
+			}
+			
+			// They exist, get the link
+			String remoteUrl = BASE_URL.replace("/api/v4", "");
+			return new GetSubscriberLinkResponse(true, Status.OK.getStatusCode(), "Created link.", String.format("%s/subscribers/%d/%s/subscribe/%d", remoteUrl, rs.getCustomerId(), rs.getToken(), planId));
+		} catch (WebApplicationException wae) {
+			return generateErrorResponse(new GetSubscriberLinkResponse(), wae);
+		} catch (Exception ex) {
+			return generateErrorResponse(new GetSubscriberLinkResponse(), ex);
+		}
+	}
 
 	private int getStatusCode() {
 		if (client == null || client.getResponse() == null) { return -1; }
@@ -192,6 +247,7 @@ public class SpreedlyPaymentProcessor {
 
 	private <T extends AbstractResponse> T generateErrorResponse(T ar, Exception ex) {
 		if (ex instanceof SpreedlyException) {
+			log.error("Spreedly exception.", ex);
 			SpreedlyException se = (SpreedlyException)ex;
 			ar.setOkay(false);
 			ar.setStatusCode(se.getStatusCode());
@@ -228,11 +284,11 @@ public class SpreedlyPaymentProcessor {
 		return ar;
 	}
 
-	private void init(String baseAddress, String apiKey) {
+	private void init() {
 		JAXRSClientFactoryBean bean = new JAXRSClientFactoryBean();
 		bean.setServiceClass(SpreedlyIntegrationService.class);
-		bean.setAddress(baseAddress);
-		bean.setUsername(apiKey);
+		bean.setAddress(BASE_URL);
+		bean.setUsername(SPREEDLY_API_KEY);
 		bean.setProvider(new SpreedlyResponseExceptionMapper());
 		spreedly = bean.create(SpreedlyIntegrationService.class, new Object[]{});
 		client = WebClient.fromClient(WebClient.client(spreedly));
