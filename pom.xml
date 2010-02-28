@@ -72,28 +72,12 @@
 					<artifactId>abdera-i18n</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>org.apache.ws.commons.axiom</groupId>
-					<artifactId>axiom-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.ws.commons.axiom</groupId>
-					<artifactId>axiom-impl</artifactId>
-				</exclusion>
-				<exclusion>
 					<groupId>org.apache.abdera</groupId>
 					<artifactId>abdera-parser</artifactId>
 				</exclusion>
 				<exclusion>
 					<artifactId>geronimo-servlet_2.5_spec</artifactId>
 					<groupId>org.apache.geronimo.specs</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jetty</artifactId>
-					<groupId>org.mortbay.jetty</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jetty-util</artifactId>
-					<groupId>org.mortbay.jetty</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>

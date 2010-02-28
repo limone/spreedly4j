@@ -27,16 +27,18 @@ import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactoryBean;
 import org.apache.cxf.jaxrs.client.WebClient;
-import org.apache.cxf.jaxrs.provider.ProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SpreedlyPaymentProcessor {
 	private final Logger log = LoggerFactory.getLogger(getClass());
-	private String BASE_URL;
-	private String SPREEDLY_API_KEY;
+	
+	private final JAXRSClientFactoryBean bean = new JAXRSClientFactoryBean();
 	private SpreedlyIntegrationService spreedly;
 	private WebClient client;
+	
+	private String BASE_URL;
+	private String SPREEDLY_API_KEY;
 
 	/**
 	 * Only here for Spring.
@@ -236,8 +238,12 @@ public class SpreedlyPaymentProcessor {
 	}
 
 	private int getStatusCode() {
-		if (client == null || client.getResponse() == null) { return -1; }
-		return client.getResponse().getStatus();
+		Response r = WebClient.client(spreedly).getResponse();
+		if (r != null) {
+			return r.getStatus();
+		}
+		
+		return -1;
 	}
 
 	private String getHeader(String header) {
@@ -285,15 +291,13 @@ public class SpreedlyPaymentProcessor {
 	}
 
 	private void init() {
-		JAXRSClientFactoryBean bean = new JAXRSClientFactoryBean();
 		bean.setServiceClass(SpreedlyIntegrationService.class);
 		bean.setAddress(BASE_URL);
 		bean.setUsername(SPREEDLY_API_KEY);
 		bean.setProvider(new SpreedlyResponseExceptionMapper());
 		spreedly = bean.create(SpreedlyIntegrationService.class, new Object[]{});
-		client = WebClient.fromClient(WebClient.client(spreedly));
-		WebClient.getConfig(client).getInInterceptors().add(new LoggingInInterceptor());
-		WebClient.getConfig(client).getOutInterceptors().add(new LoggingOutInterceptor());
-		ProviderFactory.getSharedInstance().createResponseExceptionMapper(WebApplicationException.class);
+		client = bean.createWebClient();
+		bean.getInInterceptors().add(new LoggingInInterceptor());
+		bean.getOutInterceptors().add(new LoggingOutInterceptor());
 	}
 }
