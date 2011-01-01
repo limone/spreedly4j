@@ -10,6 +10,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="invoice")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class InvoiceRequest implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@XmlElement(name="subscription_plan_id",nillable=false,required=true)
 	private Integer subscriptionPlanId;
 	

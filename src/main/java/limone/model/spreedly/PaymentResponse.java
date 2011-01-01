@@ -9,6 +9,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="invoice")
 public class PaymentResponse implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@XmlElement(nillable=false,required=true)
 	private Boolean closed;
 	

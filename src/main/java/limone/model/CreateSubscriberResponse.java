@@ -3,6 +3,10 @@ package limone.model;
 import limone.model.spreedly.ResponseSubscriber;
 
 public class CreateSubscriberResponse extends AbstractResponse {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ResponseSubscriber subscriber;
 	
 	public CreateSubscriberResponse() {

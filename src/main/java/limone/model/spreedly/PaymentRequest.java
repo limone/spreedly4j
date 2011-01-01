@@ -10,6 +10,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="payment")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PaymentRequest implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@XmlElement(name="credit_card",nillable=false,required=true)
 	private CreditCard creditCard;
 	

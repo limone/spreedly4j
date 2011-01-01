@@ -11,6 +11,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="subscription-plans")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Subscriptions implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@XmlElement(name="subscription-plan",nillable=false,required=true)
 	private List<Subscription> subscriptions;
 	

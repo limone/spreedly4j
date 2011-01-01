@@ -11,6 +11,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="errors")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Errors implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@XmlElement(nillable=false,required=true)
 	private List<Error> error;
 	

@@ -8,6 +8,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="line-item")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PaymentResponseLineItem extends ResponseLineItem {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@XmlElement(name="subscription-plan-version-id",nillable=false,required=true)
 	private Integer subscriptionPlanVersionId;
 	

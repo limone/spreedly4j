@@ -8,6 +8,11 @@ import javax.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RequestSubscriber implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@XmlElement(name="customer_id",nillable=false,required=true)
 	private Integer customerId;
 	

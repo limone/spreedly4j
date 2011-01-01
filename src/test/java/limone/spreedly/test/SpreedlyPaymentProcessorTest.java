@@ -30,14 +30,14 @@ public class SpreedlyPaymentProcessorTest extends TestCase {
 
 	@Test
 	public void testSpreedlyPaymentProcessor() {
-		new SpreedlyPaymentProcessor(BASE_URL, SPREEDLY_API_KEY);
+		new SpreedlyPaymentProcessor(BASE_URL, SPREEDLY_API_KEY).init();
 	}
 
 	@Test
 	public void testSpreedlyPaymentProcessorStringString() {
 		String baseUrl = System.getProperty("BASE_URL");
 		String apiKey = System.getProperty("SPREEDLY_API_KEY");
-		new SpreedlyPaymentProcessor(baseUrl, apiKey);
+		new SpreedlyPaymentProcessor(baseUrl, apiKey).init();
 	}
 
 	@Test
