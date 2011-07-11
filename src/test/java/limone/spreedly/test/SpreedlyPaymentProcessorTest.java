@@ -28,11 +28,13 @@ public class SpreedlyPaymentProcessorTest extends TestCase {
 		SPREEDLY_API_KEY = System.getProperty("SPREEDLY_API_KEY");
 	}
 
+	@SuppressWarnings("unused")
 	@Test
 	public void testSpreedlyPaymentProcessor() {
 		new SpreedlyPaymentProcessor(BASE_URL, SPREEDLY_API_KEY);
 	}
 
+	@SuppressWarnings("unused")
 	@Test
 	public void testSpreedlyPaymentProcessorStringString() {
 		String baseUrl = System.getProperty("BASE_URL");
