@@ -31,7 +31,7 @@ public class SpreedlyPaymentProcessorTest extends TestCase {
 	@SuppressWarnings("unused")
 	@Test
 	public void testSpreedlyPaymentProcessor() {
-		new SpreedlyPaymentProcessor(BASE_URL, SPREEDLY_API_KEY);
+		new SpreedlyPaymentProcessor(BASE_URL, SPREEDLY_API_KEY).init();
 	}
 
 	@SuppressWarnings("unused")
@@ -39,7 +39,7 @@ public class SpreedlyPaymentProcessorTest extends TestCase {
 	public void testSpreedlyPaymentProcessorStringString() {
 		String baseUrl = System.getProperty("BASE_URL");
 		String apiKey = System.getProperty("SPREEDLY_API_KEY");
-		new SpreedlyPaymentProcessor(baseUrl, apiKey);
+		new SpreedlyPaymentProcessor(baseUrl, apiKey).init();
 	}
 
 	@Test

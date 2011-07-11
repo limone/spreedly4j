@@ -2,6 +2,7 @@ package limone.service.spreedly;
 
 import java.util.Collections;
 
+import javax.annotation.PostConstruct;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -33,6 +34,8 @@ import org.slf4j.LoggerFactory;
 public class SpreedlyPaymentProcessor {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 	
+	private boolean configured = false;
+	
 	private final JAXRSClientFactoryBean bean = new JAXRSClientFactoryBean();
 	private SpreedlyIntegrationService spreedly;
 	private WebClient client;
@@ -63,7 +66,6 @@ public class SpreedlyPaymentProcessor {
 		this.SPREEDLY_API_KEY = SPREEDLY_API_KEY;
 
 		log.info("Creating Spreedly integration client.");
-		init();
 	}
 
 	/**
@@ -73,6 +75,7 @@ public class SpreedlyPaymentProcessor {
 	 *         error code if there was a problem.
 	 */
 	public SubscriptionResponse getSubscriptions() {
+		checkConfigured();
 		log.info("Retrieving subscription plans from Spreedly.");
 		try {
 			return new SubscriptionResponse(true, 0, null, spreedly.getSubscriptionPlans());
@@ -84,6 +87,7 @@ public class SpreedlyPaymentProcessor {
 	}
 	
 	public SubscriptionResponse getSubscription(String planName) {
+		checkConfigured();
 		SubscriptionResponse sr = getSubscriptions();
 		if (sr.isOkay()) {
 			for (Subscription s : sr.getSubscriptions().getSubscriptions()) {
@@ -105,6 +109,7 @@ public class SpreedlyPaymentProcessor {
 	 *         will contain a link to the Subscriber in Spreedly's system.
 	 */
 	public CreateSubscriberResponse createSubscriber(Subscriber subscriber) {
+		checkConfigured();
 		try {
 			ResponseSubscriber rs = spreedly.createSubscriber(subscriber);
 			int statusCode = getStatusCode();
@@ -126,6 +131,7 @@ public class SpreedlyPaymentProcessor {
 	}
 	
 	public DeleteSubscriberResponse deleteSubscriber(Integer id) {
+		checkConfigured();
 		try {
 			spreedly.deleteSubscriber(id);
 			int statusCode = getStatusCode();
@@ -143,6 +149,7 @@ public class SpreedlyPaymentProcessor {
 	}
 	
 	public CreateInvoiceResponse createInvoice(InvoiceRequest request) {
+		checkConfigured();
 		try {
 			InvoiceResponse resp = spreedly.createInvoice(request);
 			int statusCode = getStatusCode();
@@ -166,6 +173,7 @@ public class SpreedlyPaymentProcessor {
 	}
 	
 	public ProcessPaymentResponse payInvoice(String token, PaymentRequest request) {
+		checkConfigured();
 		try {
 			PaymentResponse resp = spreedly.processPayment(token, request);
 			int statusCode = getStatusCode();
@@ -191,6 +199,7 @@ public class SpreedlyPaymentProcessor {
 	}
 	
 	public GetSubscriberResponse getSubscriber(Long subscriberId) {
+		checkConfigured();
 		try {
 			ResponseSubscriber resp = spreedly.getSubscriber(subscriberId);
 			int statusCode = getStatusCode();
@@ -210,6 +219,7 @@ public class SpreedlyPaymentProcessor {
 	}
 	
 	public GetSubscriberLinkResponse getSubscriberLink(Subscriber s, Integer planId) {
+		checkConfigured();
 		try {
 			ResponseSubscriber rs = null;
 			
@@ -290,7 +300,11 @@ public class SpreedlyPaymentProcessor {
 		return ar;
 	}
 
-	private void init() {
+	/**
+	 * Remember to call this after you instantiate your object, if not using Spring!
+	 */
+	@PostConstruct
+	public void init() {
 		bean.setServiceClass(SpreedlyIntegrationService.class);
 		bean.setAddress(BASE_URL);
 		bean.setUsername(SPREEDLY_API_KEY);
@@ -299,5 +313,12 @@ public class SpreedlyPaymentProcessor {
 		client = bean.createWebClient();
 		bean.getInInterceptors().add(new LoggingInInterceptor());
 		bean.getOutInterceptors().add(new LoggingOutInterceptor());
+		configured = true;
+	}
+	
+	private void checkConfigured() {
+		if (!configured) {
+			throw new RuntimeException("Spreedly payment processor has not yet been initialized.");
+		}
 	}
 }

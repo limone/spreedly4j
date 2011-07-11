@@ -10,6 +10,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="subscriber")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Subscriber implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@XmlElement(name="customer-id",nillable=false,required=true)
 	private Long customerId;
 	

@@ -1,6 +1,10 @@
 package limone.model;
 
 public class GetSubscriberLinkResponse extends AbstractResponse {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String url;
 
 	public GetSubscriberLinkResponse() {

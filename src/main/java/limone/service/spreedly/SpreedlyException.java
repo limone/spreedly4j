@@ -1,6 +1,10 @@
 package limone.service.spreedly;
 
 public class SpreedlyException extends Exception {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final int statusCode;
 	
 	public SpreedlyException(int statusCode, String message, Throwable exception) {

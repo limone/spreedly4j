@@ -3,6 +3,10 @@ package limone.model;
 import limone.model.spreedly.PaymentResponse;
 
 public class ProcessPaymentResponse extends AbstractResponse {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private PaymentResponse response;
 	
 	public ProcessPaymentResponse() {

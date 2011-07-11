@@ -1,6 +1,11 @@
 package limone.model;
 
 public class DeleteSubscriberResponse extends AbstractResponse {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public DeleteSubscriberResponse() {
 		// empty
 	}

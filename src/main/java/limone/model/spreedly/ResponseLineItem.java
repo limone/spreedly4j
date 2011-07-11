@@ -10,6 +10,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="line-item")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ResponseLineItem implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@XmlElement(nillable=false,required=true)
 	private Float amount;
 	
